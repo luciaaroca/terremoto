@@ -14,10 +14,6 @@ const db = firebase.firestore();//(db) objeto que representa mi base de datos - 
 
 
 
-
-
-
-
 ///-------------------MAPA 1----------------------
 //1) Pintamos el mapa
 let map = L.map('map').setView([20, 0], 2);
@@ -90,6 +86,13 @@ getData().then(data => {
             const botonAdd = document.querySelector('.add'); //selecciona el botón
             if (botonAdd) { //si si
                 botonAdd.addEventListener('click', () => { //si pulsa el botón de añadir ---sale una alerta 
+                    
+                    //logica añadir el objeto al array de favs del usuario
+                    //..FAVORITOS
+                    //..
+                    //)
+                    //function addtofavorites(terremoto)-> creada por ti ->misma función en su código
+                    
                     Swal.fire({
                     position: "center",
                     icon: "success",
