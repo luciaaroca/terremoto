@@ -1,3 +1,22 @@
+ const firebaseConfig = {
+    apiKey: "AIzaSyBTLcUzPjMWysHsfBc_X6dyp3aI58zjcMw",
+    authDomain: "fir-web-37d16.firebaseapp.com",
+    projectId: "fir-web-37d16",
+    storageBucket: "fir-web-37d16.firebasestorage.app",
+    messagingSenderId: "329997623369",
+    appId: "1:329997623369:web:ac01341aee00c2ab7e5f98"
+  }; //datos de conexión -> nuestro objeto de conexión
+
+
+firebase.initializeApp(firebaseConfig);// Inicializaar app Firebase
+
+const db = firebase.firestore();//(db) objeto que representa mi base de datos - BBDD //inicia Firestore
+
+
+
+
+
+
 
 ///-------------------MAPA 1----------------------
 //1) Pintamos el mapa
@@ -85,7 +104,7 @@ getData().then(data => {
 
 });//cerramos función
 
-
+//----------------------------------------------
 
 
 
@@ -170,18 +189,130 @@ botonBuscar.addEventListener("click",async ()=>{
         info.innerText = `Error al obtener datos: ${error.message}`;
 }
 })
+//----------------------------------------------
 
+//---------------------CREACIÓN DE usuariosTERR-------------------------
+const createUser = (user) => { //->luego lo utilizaremos en sign up
+  db.collection("usuariosTerr") //de cada usuario voy a almacenar: id, email y fav
+    .doc(user.id) // Usar el UID del usuario como ID del documento en Firestore
+    .set({//guarda email
+      email: user.email,
+      favorites: [] // Crear array de favoritos vacío del usuario
+    })
+    .then(() => console.log("Usuario creado con ID: ", user.id))
+    .catch((error) => console.error("Error creando usuario: ", error));
+};
+//----------------------------------------------
 
+/******************************************************************************/ 
 
+//---------------------AUTENTICIDAD(Sign up -> registro)-------------------------
 
+//1)Creamos la función (lo que nos dice la docFirebase + creando un usuario(por nuestra cuenta))
 
+const signUpUser = (email, password) => {
+  firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password) //pasamos los textos que necesitamos para crear usuario
+    .then((userCredential) => {
+      // Signed in
+      let user = userCredential.user;
+      console.log(`se ha registrado ${user.email} ID:${user.uid}`)//para que tu por consola sepas que esta bien
+      Swal.fire(`Se ha registrado ${user.email}`);
 
+      // Saves user in firestore 
+      createUser({//hay una función que crea usuario ->queremos que tenga id y email
+        id: user.uid, //uid es el nombre FIJO del id
+        email: user.email
+      });
 
+    })
+    .catch((error) => {
+      console.log("Error en el sistema" + error.message, "Error: " + error.code);
+    });
+};//cierre signUpUser
 
+//2) LLamamos a la función con el botón del form1
 
+document.getElementById("form1").addEventListener("submit", function (event) {
+  event.preventDefault();
+  let email = event.target.elements.email.value;
+  let pass = event.target.elements.pass.value;
+  let pass2 = event.target.elements.pass2.value;
+//event.target.elemets(event=evento submit /target =htm form /elements=controles del formulario )
 
+//   console.log(pass)
+//   console.log(email)
+  pass === pass2 && pass.length>= 6 ? signUpUser(email, pass) : alert("La contraseña tiene que tener más de 6 dígitos/letras"); //condición ? expresiónSiVerdadero : expresiónSiFalso;
 
+  document.getElementById("form1").reset()//reset formulario
+})//cierre addEventListener form1
 
+//----------------------------------------------
 
+//---------------------AUTENTICIDAD(Sign in -> iniciar sesion)-------------------------
+//1)Creamos función sign in (dada por firebase, solo hemos personalizado alertas )
+const signInUser = (email, password) => {
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Signed in
+      let user = userCredential.user;
+      console.log(`se ha logado ${user.email} ID:${user.uid}`)
+    //   alert(`se ha logado ${user.email} ID:${user.uid}`)
+     Swal.fire(`se ha logado ${user.email}`);
+      console.log("USER", user);
+    })
+    .catch((error) => {
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      console.log(errorCode)
+      console.log(errorMessage)
+      Swal.fire(`ERROR: Antes debes registrate!`);
+    });
+}//cierre signUser
 
+//2)LLamamos a la función con el botón del form2
+document.getElementById("form2").addEventListener("submit", function(event) {
+event.preventDefault();
+  let email= event.target.elements.email2.value;
+  let pass=event.target.elements.pass3.value;
+  signInUser(email, pass)//verificamos que tienen que estar previamente registrados
+//   console.log(email2)
+//   console.log(pass3)
+  document.getElementById("form2").reset()//reset formulario
+})//cierre addEventListener form2
 
+//----------------------------------------------
+
+//---------------------AUTENTICIDAD(Sign out -> cerrar sesión)-------------------------
+//1)funcion 
+const signOut = () => {
+  let user = firebase.auth().currentUser;
+
+  firebase.auth().signOut().then(() => {
+    console.log("Sale del sistema: " + user.email)
+  }).catch((error) => {
+    console.log("hubo un error: " + error);
+  });
+}//cierre signOut
+
+//2)LLamamos a la función al puslar el botón
+document.getElementById("salir").addEventListener("click", signOut);
+
+//----------------------------------------------
+
+//---------------------CONTROL DE USUARIO-------------------------
+// Listener de usuario en el sistema-> cada vez que inicia sesión, se registra...etc
+// Controlar usuario logado(para que el usuario sepa si esta dentro del login o no)
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    console.log(`Está en el sistema:${user.email}`);
+    document.getElementById("message").innerText = `Está en el sistema: ${user.email}`;
+  } else {
+    console.log("No hay usuarios en el sistema");
+    document.getElementById("message").innerText = `No hay usuarios en el sistema`;
+  }
+});
+
+//----------------------------------------------
+/******************************************************************************/ 

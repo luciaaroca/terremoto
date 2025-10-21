@@ -15,33 +15,101 @@
 </head>
 <body>
   <header>
-     <a class="logo">TERREMOTOS</a>
+     <h1>TERREMOTOS</h1>
   </header>
-  <div id="map"></div> 
+  <main>
+        <nav>
+                <a href="#map">MAPA 1</a>
+                <a href="#mapa2">MAPA 2</a>
+        </nav>
+        <section id="autenticacion">
+           <article id="contenedorForms">
+                <div><!--Registro-->
+                    <h3>¿Todavía no te has registrado?</h3>
+                    <form id="form1" action="#" method="POST">
+                        <section>
+                            <label for="email">Email:</label><br>
+                            <input type="email" id="email" name="email" placeholder="Introduce email..."><br>
+
+                            <label for="pass">Contraseña:</label><br>
+                            <input type="password" id="pass" name="pass" placeholder="Introduce una contraseña..."><br>
+
+                            <label for="pass2">Repite contraseña:</label><br>
+                            <input type="password" id="pass2" name="pass2" placeholder="Confirma la contraseña..."><br><br>
+                            
+                            <button type="submit">Enviar</button>
+                        </section>
+                    </form>
+                </div>
+                
+                <div><!--Login-->
+                    <h3>Iniciar sesión:</h3>
+                    <form id="form2" action="#" method="POST">
+                        <section>
+                            <label for="email2">Email:</label><br>
+                            <input type="email" id="email2" name="email2" placeholder="Introduce tu email..."><br>
+
+                            <label for="pass3">Password:</label><br>
+                            <input type="password" id="pass3" name="pass3" placeholder="Introduce tu contraseña..."><br><br>
+
+                            <button type="submit">Enviar</button>
+                        </section>
+                    </form>
+
+                </div>
+                <div id="logout"><!--Logout-->
+                    <h3>Cerrar sesión</h3>
+                    <p id="message"></p>
+                    <button id="salir">Salir</button>
+                </div>
+
+
+           </article>
+        </section>
 
 
 
-  <section id="mapa2">
-     <article>
-            <label for="minMag">Magnitud mínima:</label>
-                    <input type="number" id="minMag" value="0" step="0.1">
-            
+
+        <div id="map"></div> 
+        <section id="mapa2">
+                <article>
+                        <label for="minMag">Magnitud mínima:</label>
+                                <input type="number" id="minMag" value="0" step="0.1">
                         
-            <label for="maxMag">Magnitud máxima:</label>
-                    <input type="number" id="maxMag" value="7" step="0.1">
+                                        
+                        <label for="maxMag">Magnitud máxima:</label>
+                                <input type="number" id="maxMag" value="7" step="0.1">
 
-            <label for="starttime">Fecha inicio:</label>
-                    <input type="date" id="starttime">
+                        <label for="starttime">Fecha inicio:</label>
+                                <input type="date" id="starttime">
 
-            <label for="endtime">Fecha fin:</label>
-                    <input type="date" id="endtime">
+                        <label for="endtime">Fecha fin:</label>
+                                <input type="date" id="endtime">
 
-            <button id="botonBuscar">Buscar</button>
-     </article>
-     <div id="info">Introduce filtros y pulsa "Buscar".</div>
-     <div id="map2"></div> 
-  </section>
+                        <button id="botonBuscar">Buscar</button>
+                </article>
+                <div id="info">Introduce filtros y pulsa "Buscar".</div>
+                <div id="map2"></div> 
+        </section>
+  </main>
+
+
+
+<!--libreria principal -->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+
+
+    
+<!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+<!--libreria firebase de autenticacion-->
+<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+
+<!--sweet alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="./js/sript.js"></script>  
 </body>
 </html>
