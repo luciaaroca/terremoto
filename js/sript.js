@@ -14,6 +14,8 @@ const db = firebase.firestore();//(db) objeto que representa mi base de datos - 
 
 
 
+
+
 ///-------------------MAPA 1----------------------
 //1) Pintamos el mapa
 let map = L.map('map').setView([20, 0], 2);
@@ -35,6 +37,12 @@ async function getData(){
         console.log(e);
     }
 }
+
+//*****PARA FAVORITOS***
+let todosLosMarcadores = [];   // ?????Array con todos los marcadores normales LO USAREMOS EN FAVORITOS
+let favoritosMarcadores = [];  // ???????Array con los de favoritos LO USAREMOS EN FAVORITOS
+
+
 
 //3)Función
 getData().then(data => {
@@ -82,25 +90,53 @@ getData().then(data => {
                 <button class='add'>Añadir terremoto a tu lista</button>`)
             .addTo(map);
 
+        todosLosMarcadores.push(marker);//////????????
+
         marker.on('popupopen', () => {//si se a abierto el maarcador
             const botonAdd = document.querySelector('.add'); //selecciona el botón
             if (botonAdd) { //si si
                 botonAdd.addEventListener('click', () => { //si pulsa el botón de añadir ---sale una alerta 
-                    
-                    //logica añadir el objeto al array de favs del usuario
-                    //..FAVORITOS
-                    //..
-                    //)
-                    //function addtofavorites(terremoto)-> creada por ti ->misma función en su código
-                    
-                    Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "El terremoto ha sido añadido a tu lista",
-                    showConfirmButton: false,
-                    timer: 1500
-                    });;
-                });
+                 
+                    //..FAVORITOS........(esto se ha hecho después)-->hacemos una función para cuando se pulse botonAdd
+                    const addToFavorites = (terremoto) => {
+                        const user = firebase.auth().currentUser;
+                      
+                        if (!user) {
+                          alert('Debes estar logueado para añadir a favoritos.');
+                          return;
+                        }
+                      
+                        const userRef = db.collection("usuariosTerr").doc(user.uid); //Referencia al documento del usuario actual dentro de la colección "usuariosTerr"
+                      
+                        userRef.get()//obetener datos 
+                          .then((doc) => {//promesa cumplida(get) -->pasas una función que recibe info doc
+                            if (doc.exists) {
+                              const favorites = doc.data().favorites || [];//nos devuelve los favoritos dentro del docDta de usuariosTerr
+                              const updatedFavorites = [...favorites, terremoto]; // Añadir el nuevo terremoto al array  favoritos
+                      
+                              userRef.update({ favorites: updatedFavorites }) //update. actualiza campos especificados del doc (favorites).
+                                .then(() => {
+                                  // alert('Terremoto añadido a tu lista.');
+                                  Swal.fire({
+                                  position: "center",
+                                  icon: "success",
+                                  title: "El terremoto ha sido añadido a tu lista",
+                                  showConfirmButton: false,
+                                  timer: 1500
+                                  });;
+                                });
+                            } else {
+                              console.log('No se encontró el usuario.');
+                            }
+                          })
+                          .catch((error) => {
+                            console.error('Error añadiendo a tu lista: ', error);
+                          });
+                          // alert('Terremoto añadido a tu lista');
+                      };//cierre addToFavorites
+                      addToFavorites(terremoto);
+                    //..............
+                });//cierre addEventlistener de botonAdd
             }
         });
     });
@@ -109,6 +145,98 @@ getData().then(data => {
 
 //----------------------------------------------
 
+//--------------------FAVORITOS(ver tu lista de terremotos)----------------
+//1) función para limpiar mapa_____
+function limpiarMapa() {
+  todosLosMarcadores.forEach(m => map.removeLayer(m));//quita todos los marcadores
+  favoritosMarcadores.forEach(m => map.removeLayer(m));//quita todos los marcadores
+}
+//2)función para ver los terremotos favoritos----------
+const verFavoritos = () => {
+    const user = firebase.auth().currentUser;
+                      
+    if (!user) {
+    alert('ERROR: Debes haber iniciado sesión para poder tener tu lista de terremotos.');
+    return;
+    }
+
+    limpiarMapa();
+    
+    const userRef = db.collection("usuariosTerr").doc(user.uid);   
+
+    userRef.get()//obetener datos 
+        .then((doc) => {//promesa cumplida(get) -->pasas una función que recibe info doc
+        if (!doc.exists) {
+          alert("No tienes favoritos guardados")
+          return
+          } 
+          
+          const favoritos = doc.data().favorites || [];//cogemos los favoritos de firebase
+          
+          
+          favoritosMarcadores = favoritos.map(terremoto=>{
+              //volvemos a capturar los datos
+              const coordenadas = [terremoto.geometry.coordinates[1], terremoto.geometry.coordinates[0]]; 
+
+              const fecha = new Date(terremoto.properties.time);
+              const fechaFormateada = fecha.toLocaleString();
+
+              const magnitud = terremoto.properties.mag;
+
+              //volvemos a pintar los marcadores
+                 function obtenerIcono(mag) {
+                    let color = 'green'; // magnitud baja
+                    if (mag >= 3 && mag < 5) color = 'yellow'; 
+                    else if (mag >= 5 && mag < 7) color = 'orange'; 
+                    else if (mag >=7) color = 'red';
+              
+                    return L.icon({ //asi cambiamos el color del icono (luego lo ponemos abajo al marcador)
+                        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+                        shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    });
+                }
+
+                const marker = L.marker(coordenadas,  { icon: obtenerIcono(terremoto.properties.mag) }) //creamos el marcador
+                  .bindPopup(`${terremoto.properties.title}<br>
+                      ${fechaFormateada}<br>
+                      ${terremoto.properties.place}
+                      <br>${terremoto.properties.code}
+                      <br>${magnitud}
+                      <br><a href="${terremoto.properties.url}">Más información</a><br>
+                      <button class='delete'>Borrar terremoto de tu lista</button>`)
+                  .addTo(map);
+
+                
+                 marker.on('popupopen', () => {})
+                      
+                 return marker
+
+
+
+
+
+          })       
+        })//cierre then
+        .catch((error)=>{
+            console.error('Error añadiendo a tu lista: ', error);
+        })
+  }//cierre verFavoritos
+
+//3)función para ver todos los terremotos----------
+function verTodos() {
+  limpiarMapa();
+  todosLosMarcadores.forEach(m => m.addTo(map));
+}
+
+//4)Botones de ver favoritos y ver todos (click html)----------
+document.getElementById('verAdd').addEventListener('click',verFavoritos);
+document.getElementById('verTodos').addEventListener('click', verTodos);
+
+//-----------------------------------------------------------------------
 
 
 
@@ -196,7 +324,7 @@ botonBuscar.addEventListener("click",async ()=>{
 
 //---------------------CREACIÓN DE usuariosTERR-------------------------
 const createUser = (user) => { //->luego lo utilizaremos en sign up
-  db.collection("usuariosTerr") //de cada usuario voy a almacenar: id, email y fav
+  db.collection("usuariosTerr") //CREAMOS COLECCIÓN: usuariosTerr---->de cada usuario voy a almacenar: id, email y fav.
     .doc(user.id) // Usar el UID del usuario como ID del documento en Firestore
     .set({//guarda email
       email: user.email,
@@ -262,7 +390,7 @@ const signInUser = (email, password) => {
       let user = userCredential.user;
       console.log(`se ha logado ${user.email} ID:${user.uid}`)
     //   alert(`se ha logado ${user.email} ID:${user.uid}`)
-     Swal.fire(`se ha logado ${user.email}`);
+     Swal.fire(`El usuario: ${user.email} ha iniciado sesión`);
       console.log("USER", user);
     })
     .catch((error) => {

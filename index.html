@@ -24,7 +24,7 @@
         </nav>
         <section id="autenticacion">
            <article id="contenedorForms">
-                <div><!--Registro-->
+                <div id="logup"><!--Registro-->
                     <h3>¿Todavía no te has registrado?</h3>
                     <form id="form1" action="#" method="POST">
                         <section>
@@ -37,12 +37,12 @@
                             <label for="pass2">Repite contraseña:</label><br>
                             <input type="password" id="pass2" name="pass2" placeholder="Confirma la contraseña..."><br><br>
                             
-                            <button type="submit">Enviar</button>
+                            <button type="submit">Sign Up</button>
                         </section>
                     </form>
                 </div>
                 
-                <div><!--Login-->
+                <div id="login"><!--Login-->
                     <h3>Iniciar sesión:</h3>
                     <form id="form2" action="#" method="POST">
                         <section>
@@ -52,15 +52,16 @@
                             <label for="pass3">Password:</label><br>
                             <input type="password" id="pass3" name="pass3" placeholder="Introduce tu contraseña..."><br><br>
 
-                            <button type="submit">Enviar</button>
+                            <button type="submit">Sign In</button>
                         </section>
                     </form>
+                    <p id="message"></p>
 
                 </div>
                 <div id="logout"><!--Logout-->
-                    <h3>Cerrar sesión</h3>
-                    <p id="message"></p>
-                    <button id="salir">Salir</button>
+                    <h3>Cerrar sesión:</h3>
+                    <!-- <p id="message"></p> -->
+                    <button id="salir">Sign Out</button>
                 </div>
 
 
@@ -68,9 +69,13 @@
         </section>
 
 
+        <section id="mapa1">
+          <button id="verAdd">Ver tu lista de terremotos</button>
+          <button id="verTodos">Ver todos los terremotos</button>
+          <p>Para crear tu lista de terremotos es necesario estar registrado y posteriormente iniciar sesión</p>
+          <div id="map"></div> 
+        </section>
 
-
-        <div id="map"></div> 
         <section id="mapa2">
                 <article>
                         <label for="minMag">Magnitud mínima:</label>
