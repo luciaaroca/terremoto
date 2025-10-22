@@ -19,47 +19,47 @@
   </header>
   <main>
         <nav>
-                <a href="#map">MAPA 1</a>
+                <a href="#mapa1">MAPA 1</a>
                 <a href="#mapa2">MAPA 2</a>
         </nav>
         <section id="autenticacion">
            <article id="contenedorForms">
-                <div id="logup"><!--Registro-->
-                    <h3>¿Todavía no te has registrado?</h3>
+                <div id="logup" class="log"><!--Registro-->
+                    <h3>REGISTRARSE</h3>
                     <form id="form1" action="#" method="POST">
-                        <section>
-                            <label for="email">Email:</label><br>
-                            <input type="email" id="email" name="email" placeholder="Introduce email..."><br>
+                        <section class="f">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" placeholder="Introduce email...">
 
-                            <label for="pass">Contraseña:</label><br>
-                            <input type="password" id="pass" name="pass" placeholder="Introduce una contraseña..."><br>
+                            <label for="pass">Contraseña:</label>
+                            <input type="password" id="pass" name="pass" placeholder="Introduce una contraseña...">
 
-                            <label for="pass2">Repite contraseña:</label><br>
-                            <input type="password" id="pass2" name="pass2" placeholder="Confirma la contraseña..."><br><br>
+                            <label for="pass2">Repite contraseña:</label>
+                            <input type="password" id="pass2" name="pass2" placeholder="Confirma la contraseña...">
                             
                             <button type="submit">Sign Up</button>
                         </section>
                     </form>
                 </div>
                 
-                <div id="login"><!--Login-->
-                    <h3>Iniciar sesión:</h3>
+                <div id="login" class="log"><!--Login-->
+                    <h3>INICIAR SESIÓN</h3>
                     <form id="form2" action="#" method="POST">
-                        <section>
-                            <label for="email2">Email:</label><br>
-                            <input type="email" id="email2" name="email2" placeholder="Introduce tu email..."><br>
+                        <section class="f">
+                            <label for="email2">Email:</label>
+                            <input type="email" id="email2" name="email2" placeholder="Introduce tu email...">
 
-                            <label for="pass3">Password:</label><br>
-                            <input type="password" id="pass3" name="pass3" placeholder="Introduce tu contraseña..."><br><br>
+                            <label for="pass3">Password:</label>
+                            <input type="password" id="pass3" name="pass3" placeholder="Introduce tu contraseña...">
 
                             <button type="submit">Sign In</button>
                         </section>
                     </form>
                     
                 </div>
-                <div id="logout"><!--Logout-->
+                <div id="logout" class="log" class="f"><!--Logout-->
                     <p id="message"></p>
-                    <h3>Cerrar sesión:</h3>
+                    <h3>CERRAR SESIÓN</h3>
                     <!-- <p id="message"></p> -->
                     <button id="salir">Sign Out</button>
                 </div>
@@ -68,8 +68,15 @@
            </article>
         </section>
 
-
+        
         <section id="mapa1">
+          <h1>MAPA 1</h1>
+          <section id="leyenda">
+                <li><span style="background-color: #1E881A;"></span> Magnitud 0 → 3</li>
+                <li><span style="background-color: #e5c40e;"></span> Magnitud 3 → 5</li>
+                <li><span style="background-color: #ed7708;"></span> Magnitud 5 → 7</li>
+                <li><span style="background-color: #f62904;"></span> Magnitud + 7</li> 
+          </section>
           <button id="verAdd">Ver tu lista de terremotos</button>
           <button id="verTodos">Ver todos los terremotos</button>
           <p>Para crear tu lista de terremotos es necesario estar registrado y posteriormente iniciar sesión</p>
@@ -77,7 +84,9 @@
         </section>
 
         <section id="mapa2">
-                <article>
+            <h1>MAPA 2</h1>
+            <h3>FILTRA POR MAGNITUD</h3>
+                <article id="filtrosmagni">
                         <label for="minMag">Magnitud mínima:</label>
                                 <input type="number" id="minMag" value="0" step="0.1">
                         
@@ -93,7 +102,7 @@
 
                         <button id="botonBuscar">Buscar</button>
                 </article>
-                <div id="info">Introduce filtros y pulsa "Buscar".</div>
+                <div id="info"></div>
                 <div id="map2"></div> 
         </section>
   </main>
