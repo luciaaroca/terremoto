@@ -211,13 +211,18 @@ const verFavoritos = () => {
                   .addTo(map);
 
                 
-                 marker.on('popupopen', () => {})
+                 marker.on('popupopen', () => {
+                 //aqui introducimos el addeventlistener de ----BORRAR FAV----
+                   const botonDelete = document.querySelector('.delete'); //selecciona el botón
+                   if (botonDelete) { //si si
+                   botonDelete.addEventListener('click', () => {
+                    borrarFavoritos(terremoto.id);//llamamos a la función borrar
+                    map.removeLayer(marker); //eliminamos el marker del mapa
+                   })
+                   }
+                 })//cierre marker.on
                       
                  return marker
-
-
-
-
 
           })       
         })//cierre then
@@ -237,6 +242,46 @@ document.getElementById('verAdd').addEventListener('click',verFavoritos);
 document.getElementById('verTodos').addEventListener('click', verTodos);
 
 //-----------------------------------------------------------------------
+
+
+//-------BOTÓN BORRAR--------
+ const borrarFavoritos = (terremotoId) => { //hay que pasarle un parámetro a esta función (ya que el usuario es lo que nos pasará)
+ const user = firebase.auth().currentUser;
+                      
+    if (!user) {
+    alert('ERROR: Debes haber iniciado sesión para poder eliminar terremotos de tu lista.');
+    return;
+    }
+
+    const userRef = db.collection("usuariosTerr").doc(user.uid);  
+     userRef.get()//obetener datos 
+        .then((doc) => {//promesa cumplida(get) -->pasas una función que recibe info doc
+        if (doc.exists) {
+        const favorites = doc.data().favorites || [];//busca la clave favorites(queremos ese array)
+        const updatedFavorites = favorites.filter(fav => fav.id !== terremotoId); //sirve para dejar los que no se hayan seleccionado
+         
+         return userRef.update({ favorites: updatedFavorites }) //llamamos al metodo de firestore para hacer update sobre ese usuario
+      }else{
+         console.log('No se encontró el usuario.');
+      }
+       }).then(() => {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Terremoto eliminado de tu lista",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      // verFavoritos(); // recarga la vista
+    })
+      .catch((error) => {
+      console.error('Error eliminando de favoritos: ', error);
+    });
+
+};//cierre borrarFavoritos----->llamamos a esta función en el marker.on de verFavoritos(igual que cuando tuvimos que hacer favoritos lo añadimos al marker.on de creación del mapa(1º))
+//------------------
+
+
 
 
 
@@ -322,6 +367,16 @@ botonBuscar.addEventListener("click",async ()=>{
 })
 //----------------------------------------------
 
+
+
+
+
+
+
+
+
+
+//Sobre MAPA1
 //---------------------CREACIÓN DE usuariosTERR-------------------------
 const createUser = (user) => { //->luego lo utilizaremos en sign up
   db.collection("usuariosTerr") //CREAMOS COLECCIÓN: usuariosTerr---->de cada usuario voy a almacenar: id, email y fav.
@@ -374,9 +429,22 @@ document.getElementById("form1").addEventListener("submit", function (event) {
 
 //   console.log(pass)
 //   console.log(email)
-  pass === pass2 && pass.length>= 6 ? signUpUser(email, pass) : alert("La contraseña tiene que tener más de 6 dígitos/letras"); //condición ? expresiónSiVerdadero : expresiónSiFalso;
+
+  //--- regex ----
+   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
+   if (!passwordRegex.test(pass)) {
+    alert("La contraseña debe tener al menos 6 caracteres, una mayúscula y un número.");
+    return;
+  }
+  if (pass !== pass2) {
+    alert("Las contraseñas no coinciden.");
+    return;
+  }
+  signUpUser(email, pass);
+  //pass === pass2 && pass.length>= 6 ? signUpUser(email, pass) : alert("La contraseña tiene que tener más de 6 dígitos/letras"); //condición ? expresiónSiVerdadero : expresiónSiFalso;
 
   document.getElementById("form1").reset()//reset formulario
+  document.getElementById("logup").remove()//se elimina el formulario de la pantalla al darle a enviar
 })//cierre addEventListener form1
 
 //----------------------------------------------
@@ -389,6 +457,7 @@ const signInUser = (email, password) => {
       // Signed in
       let user = userCredential.user;
       console.log(`se ha logado ${user.email} ID:${user.uid}`)
+      document.getElementById("message").innerText = `Está en el sistema: ${user.email}`//????????
     //   alert(`se ha logado ${user.email} ID:${user.uid}`)
      Swal.fire(`El usuario: ${user.email} ha iniciado sesión`);
       console.log("USER", user);
@@ -411,6 +480,7 @@ event.preventDefault();
 //   console.log(email2)
 //   console.log(pass3)
   document.getElementById("form2").reset()//reset formulario
+   document.getElementById("login").remove()
 })//cierre addEventListener form2
 
 //----------------------------------------------
@@ -428,22 +498,10 @@ const signOut = () => {
 }//cierre signOut
 
 //2)LLamamos a la función al puslar el botón
-document.getElementById("salir").addEventListener("click", signOut);
+
+document.getElementById("salir").addEventListener("click",()=>{
+  signOut(); //cerrar sesión
+  document.getElementById("message").innerText = `No hay usuarios en el sistema` //mensaje de info
+})
 
 //----------------------------------------------
-
-//---------------------CONTROL DE USUARIO-------------------------
-// Listener de usuario en el sistema-> cada vez que inicia sesión, se registra...etc
-// Controlar usuario logado(para que el usuario sepa si esta dentro del login o no)
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    console.log(`Está en el sistema:${user.email}`);
-    document.getElementById("message").innerText = `Está en el sistema: ${user.email}`;
-  } else {
-    console.log("No hay usuarios en el sistema");
-    document.getElementById("message").innerText = `No hay usuarios en el sistema`;
-  }
-});
-
-//----------------------------------------------
-/******************************************************************************/ 

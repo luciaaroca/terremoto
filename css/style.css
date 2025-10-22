@@ -130,11 +130,35 @@ button{
  }
 
 #contenedorForms{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap:15px;
 	background-color: rgb(172, 209, 209);
-	padding: 20px;
+	
+
 }
 #message{
 background-color: #858789;
 color: white;
+}
+#logup{
+width: 80%;
+padding: 10px;
+background-color: white;
+border: solid 2px black;
+}
+#login{
+width: 80%;
+padding: 10px;
+background-color: white;
+border: solid 2px black;
+}
+#logout{
+width: 80%;
+padding: 10px;
+background-color: white;
+border: solid 2px black;
 }
  
