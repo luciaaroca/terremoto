@@ -15,17 +15,25 @@
 </head>
 <body>
   <header>
-     <h1>TERREMOTOS</h1>
+    <img src="./assets/planeta.png" alt="Logo" class="logo">
+     <h1>Terremotos.web</h1>
   </header>
   <main>
         <nav>
-                <a href="#mapa1">MAPA 1</a>
-                <a href="#mapa2">MAPA 2</a>
+          <a href="#mapa1">MAPA 1</a>
+          <a href="#mapa2">MAPA 2</a>
         </nav>
+        <section id="masthead">
+           <!-- <p>Bienvenido a Sismos al Día, tu espacio para seguir de cerca la actividad 
+            sísmica en tiempo real. Aquí podrás explorar los terremotos que han ocurrido 
+            recientemente y conocer los movimientos más recientes en distintas regiones del mundo.
+            Nuestra plataforma te ofrece información clara, actualizada y confiable, para que estés 
+            siempre al tanto de la actividad sísmica que nos rodea</p> -->
+        </section>
         <section id="autenticacion">
            <article id="contenedorForms">
                 <div id="logup" class="log"><!--Registro-->
-                    <h3>REGISTRARSE</h3>
+                    <h2>REGISTRARSE</h2>
                     <form id="form1" action="#" method="POST">
                         <section class="f">
                             <label for="email">Email:</label>
@@ -43,7 +51,7 @@
                 </div>
                 
                 <div id="login" class="log"><!--Login-->
-                    <h3>INICIAR SESIÓN</h3>
+                    <h2>INICIAR SESIÓN</h2>
                     <form id="form2" action="#" method="POST">
                         <section class="f">
                             <label for="email2">Email:</label>
@@ -59,7 +67,7 @@
                 </div>
                 <div id="logout" class="log" class="f"><!--Logout-->
                     <p id="message"></p>
-                    <h3>CERRAR SESIÓN</h3>
+                    <h2>CERRAR SESIÓN</h2>
                     <!-- <p id="message"></p> -->
                     <button id="salir">Sign Out</button>
                 </div>
@@ -70,21 +78,23 @@
 
         
         <section id="mapa1">
-          <h1>MAPA 1</h1>
+          <h2>MAPA 1</h2>
           <section id="leyenda">
                 <li><span style="background-color: #1E881A;"></span> Magnitud 0 → 3</li>
                 <li><span style="background-color: #e5c40e;"></span> Magnitud 3 → 5</li>
                 <li><span style="background-color: #ed7708;"></span> Magnitud 5 → 7</li>
                 <li><span style="background-color: #f62904;"></span> Magnitud + 7</li> 
           </section>
+          <div id="botonesmap1">
           <button id="verAdd">Ver tu lista de terremotos</button>
           <button id="verTodos">Ver todos los terremotos</button>
+          </div>
           <p>Para crear tu lista de terremotos es necesario estar registrado y posteriormente iniciar sesión</p>
           <div id="map"></div> 
         </section>
 
         <section id="mapa2">
-            <h1>MAPA 2</h1>
+            <h2>MAPA 2</h2>
             <h3>FILTRA POR MAGNITUD</h3>
                 <article id="filtrosmagni">
                         <label for="minMag">Magnitud mínima:</label>

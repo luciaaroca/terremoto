@@ -18,12 +18,20 @@ const db = firebase.firestore();//(db) objeto que representa mi base de datos - 
 
 ///-------------------MAPA 1----------------------
 //1) Pintamos el mapa
-let map = L.map('map').setView([20, 0], 2);
-var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
-	minZoom: 0,
-	maxZoom: 20,
-	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	ext: 'png'
+// let map = L.map('map').setView([20, 0], 2);
+// var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
+// 	minZoom: 0,
+// 	maxZoom: 20,
+// 	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+// 	ext: 'png'
+// }).addTo(map);
+
+var map = L.map('map').setView([20, 0], 2);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    minZoom: 0,
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
 //2)Obtenemos la info de la api
@@ -90,7 +98,7 @@ getData().then(data => {
                 <button class='add'>Añadir terremoto a tu lista</button>`)
             .addTo(map);
 
-        todosLosMarcadores.push(marker);//////????????
+        todosLosMarcadores.push(marker);
 
         marker.on('popupopen', () => {//si se a abierto el maarcador
             const botonAdd = document.querySelector('.add'); //selecciona el botón
@@ -288,12 +296,20 @@ document.getElementById('verTodos').addEventListener('click', verTodos);
 //-----------------------MAPA 2-----------------
 
 //1) Pintamos el mapa ✔
-let map2 = L.map('map2').setView([20, 0], 2);
-var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}', {
-	minZoom: 0,
-	maxZoom: 20,
-	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	ext: 'png'
+// let map2 = L.map('map2').setView([20, 0], 2);
+// var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}', {
+// 	minZoom: 0,
+// 	maxZoom: 20,
+// 	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+// 	ext: 'png'
+// }).addTo(map2);
+
+var map2 = L.map('map2').setView([20, 0], 2);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    minZoom: 0,
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map2);
 
 
@@ -321,7 +337,9 @@ botonBuscar.addEventListener("click",async ()=>{
     if (magEnd) url += `&minmagnitude=${magEnd}`;
     if (magMax) url += `&maxmagnitude=${magMax}`;
     if (magMin) url += `&minmagnitude=${magMin}`;
-   
+
+    
+   ///AQUI CREO QUE PODRIA METER UN GIFT
     console.log(url);//para ver
     info.innerText = "Cargando datos...";
     clearMarkers();
@@ -359,10 +377,10 @@ botonBuscar.addEventListener("click",async ()=>{
             
             markers.push(marker);
     
+            
     })
-
     }catch(error){
-        info.innerText = `Error al obtener datos: ${error.message}`;
+        console.log( `Error al obtener datos: ${error.message}`);
 }
 })
 //----------------------------------------------
