@@ -235,8 +235,8 @@ label{
 }
 
 #mapa1{
-
 	margin-top: 80px;
+	scroll-margin-top: 100px;
 
 }
 #mapa1 h2{
@@ -252,6 +252,7 @@ label{
 /*MAPA 2*/
 #mapa2{
 	margin-top: 60px;
+	scroll-margin-top: 100px;
 }
 #map2 { 
 	
