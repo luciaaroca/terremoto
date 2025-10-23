@@ -18,13 +18,6 @@ const db = firebase.firestore();//(db) objeto que representa mi base de datos - 
 
 ///-------------------MAPA 1----------------------
 //1) Pintamos el mapa
-// let map = L.map('map').setView([20, 0], 2);
-// var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
-// 	minZoom: 0,
-// 	maxZoom: 20,
-// 	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-// 	ext: 'png'
-// }).addTo(map);
 
 var map = L.map('map').setView([20, 0], 2);
 
@@ -296,14 +289,6 @@ document.getElementById('verTodos').addEventListener('click', verTodos);
 //-----------------------MAPA 2-----------------
 
 //1) Pintamos el mapa ✔
-// let map2 = L.map('map2').setView([20, 0], 2);
-// var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}', {
-// 	minZoom: 0,
-// 	maxZoom: 20,
-// 	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-// 	ext: 'png'
-// }).addTo(map2);
-
 var map2 = L.map('map2').setView([20, 0], 2);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -327,21 +312,28 @@ function clearMarkers() {
 
 
 botonBuscar.addEventListener("click",async ()=>{
-    const magMin = document.getElementById("minMag").value;
-    const magMax = document.getElementById("maxMag").value;
-    const magStart = document.getElementById("starttime").value;
-    const magEnd = document.getElementById("endtime").value;
+
+    const magMin = document.getElementById("minMag");
+    const magMax = document.getElementById("maxMag");
+    const magStart = document.getElementById("starttime");
+    const magEnd = document.getElementById("endtime");  
 
     let url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson`; //filtros dinámicos
-    if (magStart) url += `&starttime=${magStart}`;
-    if (magEnd) url += `&minmagnitude=${magEnd}`;
-    if (magMax) url += `&maxmagnitude=${magMax}`;
-    if (magMin) url += `&minmagnitude=${magMin}`;
+    if (magStart) url += `&starttime=${magStart.value}`;
+    if (magEnd) url += `&endtime=${magEnd.value}`;
+    if (magMax) url += `&maxmagnitude=${magMax.value}`;
+    if (magMin) url += `&minmagnitude=${magMin.value}`;
 
     
-   ///AQUI CREO QUE PODRIA METER UN GIFT
-    console.log(url);//para ver
-    info.innerText = "Cargando datos...";
+   ///METER UN GIFT
+   
+     info.innerHTML = `
+    <img src="https://i.gifer.com/ZZ5H.gif" 
+       alt="Cargando..." 
+       style="width:50px; height:50px; display:block; margin:auto;">
+     <p style="text-align:center;">Cargando datos...</p>
+     `;
+
     clearMarkers();
 
     try {
@@ -351,6 +343,18 @@ botonBuscar.addEventListener("click",async ()=>{
         console.log (data)
 
         const terremotos = data.features;
+
+        //INTENTANDO SPINNER
+        // let img = document.createElement('img');
+        // img.src = ;
+        // img.className = "promise-avatar-example";
+        // document.body.append(img);
+
+        // await new Promise((resolve, reject) => setTimeout(resolve, 3000));
+        // img.remove();
+
+
+
 
         if (!terremotos || terremotos.length === 0) {
         info.innerText = "No se encontraron terremotos con esos filtros.";
@@ -376,13 +380,21 @@ botonBuscar.addEventListener("click",async ()=>{
                 .addTo(map2);
             
             markers.push(marker);
-    
+     
             
     })
     }catch(error){
         console.log( `Error al obtener datos: ${error.message}`);
-}
+
+    }finally { //Limpiar los inputs al final del proceso
+    magMin.value = "";
+    magMax.value = "";
+    magStart.value = "";
+    magEnd.value = "";
+  }
 })
+
+
 //----------------------------------------------
 
 
