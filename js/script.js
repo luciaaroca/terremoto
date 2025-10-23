@@ -328,7 +328,7 @@ botonBuscar.addEventListener("click",async ()=>{
    ///METER UN GIFT
    
      info.innerHTML = `
-    <img src="https://i.gifer.com/ZZ5H.gif" 
+    <img src="https://media.tenor.com/WX_LDjYUrMsAAAAi/loading.gif" 
        alt="Cargando..." 
        style="width:50px; height:50px; display:block; margin:auto;">
      <p style="text-align:center;">Cargando datos...</p>
